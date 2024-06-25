@@ -40,19 +40,19 @@ class FileStorage:
 
     def save(self):
         """serializes __objs to the JSON file (path: __f_p)"""
-        json_objects = {}
+        json_objs = {}
         for key in self.__objs:
-            json_objects[key] = self.__objs[key].to_dict()
+            json_objs[key] = self.__objs[key].to_dict()
         with open(self.__f_p, 'w') as f:
-            json.dump(json_objects, f)
+            json.dump(json_objs, f)
 
     def reload(self):
         """deserializes the JSON file to __objs"""
         try:
             with open(self.__f_p, 'r') as f:
-                jo = json.load(f)
-            for key in jo:
-                self.__objs[key] = clses[jo[key]["__class__"]](**jo[key])
+                juo = json.load(f)
+            for key in juo:
+                self.__objs[key] = clses[juo[key]["__class__"]](**juo[key])
         except:
             pass
 

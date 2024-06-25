@@ -38,9 +38,9 @@ class HBNBCommand(cmd.Cmd):
         nw_dct = {}
         for arg in args:
             if "=" in arg:
-                kvp = arg.split('=', 1)
-                key = kvp[0]
-                value = kvp[1]
+                kovp = arg.split('=', 1)
+                key = kovp[0]
+                value = kovp[1]
                 if value[0] == value[-1] == '"':
                     value = shlex.split(value)[0].replace('_', ' ')
                 else:

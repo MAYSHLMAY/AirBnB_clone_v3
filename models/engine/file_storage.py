@@ -32,11 +32,11 @@ class FileStorage:
             return nw_dct
         return self.__objs
 
-    def new(self, ubj):
-        """sets in __objs the ubj with key <ubj class name>.id"""
-        if ubj is not None:
-            key = ubj.__class__.__name__ + "." + ubj.id
-            self.__objs[key] = ubj
+    def new(self, obj):
+        """sets in __objs the obj with key <obj class name>.id"""
+        if obj is not None:
+            key = obj.__class__.__name__ + "." + obj.id
+            self.__objs[key] = obj
 
     def save(self):
         """serializes __objs to the JSON file (path: __f_p)"""
@@ -56,10 +56,10 @@ class FileStorage:
         except:
             pass
 
-    def delete(self, ubj=None):
-        """delete ubj from __objs if it’s inside"""
-        if ubj is not None:
-            key = ubj.__class__.__name__ + '.' + ubj.id
+    def delete(self, obj=None):
+        """delete obj from __objs if it’s inside"""
+        if obj is not None:
+            key = obj.__class__.__name__ + '.' + obj.id
             if key in self.__objs:
                 del self.__objs[key]
 

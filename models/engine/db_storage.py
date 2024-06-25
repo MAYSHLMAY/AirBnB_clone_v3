@@ -46,23 +46,23 @@ class DBStorage:
         for clus in clses:
             if cls is None or cls is clses[clus] or cls is clus:
                 obujs = self.__sess.query(clses[clus]).all()
-                for ubj in obujs:
-                    key = ubj.__class__.__name__ + '.' + ubj.id
-                    nw_dct[key] = ubj
+                for obj in obujs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    nw_dct[key] = obj
         return (nw_dct)
 
-    def new(self, ubj):
+    def new(self, obj):
         """add the object to the current db session"""
-        self.__sess.add(ubj)
+        self.__sess.add(obj)
 
     def save(self):
         """commit all changes of the current db session"""
         self.__sess.commit()
 
-    def delete(self, ubj=None):
-        """delete from the current db session ubj if not None"""
-        if ubj is not None:
-            self.__sess.delete(ubj)
+    def delete(self, obj=None):
+        """delete from the current db session obj if not None"""
+        if obj is not None:
+            self.__sess.delete(obj)
 
     def reload(self):
         """reloads data from the db"""

@@ -72,7 +72,7 @@ class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_all_returns_dict(self):
-        """Test that all returns the FileStorage.__objs attr"""
+        """Test that all returns the FileStorage.__objects attr"""
         storage = FileStorage()
         nw_dct = storage.all()
         self.assertEqual(type(nw_dct), dict)
@@ -80,7 +80,7 @@ class TestFileStorage(unittest.TestCase):
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_new(self):
-        """test that new adds an object to the FileStorage.__objs attr"""
+        """test that new adds an object to the FileStorage.__objects attr"""
         storage = FileStorage()
         save = FileStorage._FileStorage__objects
         FileStorage._FileStorage__objects = {}

@@ -16,12 +16,12 @@ import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-classes = {"Amenity": Amenity, "City": City,
+clses = {"Amenity": Amenity, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class DBStorage:
-    """interaacts with the MySQL database"""
+    """interacts with the db"""
     __engl = None
     __sess = None
 
@@ -41,34 +41,34 @@ class DBStorage:
             Base.metadata.drop_all(self.__engl)
 
     def all(self, cls=None):
-        """query on the current database session"""
-        new_dict = {}
-        for clss in classes:
-            if cls is None or cls is classes[clss] or cls is clss:
-                objs = self.__sess.query(classes[clss]).all()
-                for obj in objs:
-                    key = obj.__class__.__name__ + '.' + obj.id
-                    new_dict[key] = obj
-        return (new_dict)
+        """query on the current db session"""
+        nw_dct = {}
+        for clus in clses:
+            if cls is None or cls is clses[clus] or cls is clus:
+                obujs = self.__sess.query(clses[clus]).all()
+                for ubj in obujs:
+                    key = ubj.__class__.__name__ + '.' + ubj.id
+                    nw_dct[key] = ubj
+        return (nw_dct)
 
-    def new(self, obj):
-        """add the object to the current database session"""
-        self.__sess.add(obj)
+    def new(self, ubj):
+        """add the object to the current db session"""
+        self.__sess.add(ubj)
 
     def save(self):
-        """commit all changes of the current database session"""
+        """commit all changes of the current db session"""
         self.__sess.commit()
 
-    def delete(self, obj=None):
-        """delete from the current database session obj if not None"""
-        if obj is not None:
-            self.__sess.delete(obj)
+    def delete(self, ubj=None):
+        """delete from the current db session ubj if not None"""
+        if ubj is not None:
+            self.__sess.delete(ubj)
 
     def reload(self):
-        """reloads data from the database"""
+        """reloads data from the db"""
         Base.metadata.create_all(self.__engl)
-        sess_factory = sessionmaker(bind=self.__engl, expire_on_commit=False)
-        Session = scoped_session(sess_factory)
+        sess_fact = sessionmaker(bind=self.__engl, expire_on_commit=False)
+        Session = scoped_session(sess_fact)
         self.__sess = Session
 
     def close(self):

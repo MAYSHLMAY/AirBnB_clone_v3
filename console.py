@@ -13,7 +13,7 @@ from models.state import State
 from models.user import User
 import shlex  # for splitting the line along spaces except in double quotes
 
-classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
+clses = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
 
 
@@ -35,7 +35,7 @@ class HBNBCommand(cmd.Cmd):
 
     def _key_value_parser(self, args):
         """creates a dictionary from a list of strings"""
-        new_dict = {}
+        nw_dct = {}
         for arg in args:
             if "=" in arg:
                 kvp = arg.split('=', 1)
@@ -51,8 +51,8 @@ class HBNBCommand(cmd.Cmd):
                             value = float(value)
                         except:
                             continue
-                new_dict[key] = value
-        return new_dict
+                nw_dct[key] = value
+        return nw_dct
 
     def do_create(self, arg):
         """Creates a new instance of a class"""
@@ -60,9 +60,9 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
             return False
-        if args[0] in classes:
-            new_dict = self._key_value_parser(args[1:])
-            instance = classes[args[0]](**new_dict)
+        if args[0] in clses:
+            nw_dct = self._key_value_parser(args[1:])
+            instance = clses[args[0]](**nw_dct)
         else:
             print("** class doesn't exist **")
             return False
@@ -75,7 +75,7 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
             return False
-        if args[0] in classes:
+        if args[0] in clses:
             if len(args) > 1:
                 key = args[0] + "." + args[1]
                 if key in models.storage.all():
@@ -92,7 +92,7 @@ class HBNBCommand(cmd.Cmd):
         args = shlex.split(arg)
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] in classes:
+        elif args[0] in clses:
             if len(args) > 1:
                 key = args[0] + "." + args[1]
                 if key in models.storage.all():
@@ -111,8 +111,8 @@ class HBNBCommand(cmd.Cmd):
         obj_list = []
         if len(args) == 0:
             obj_dict = models.storage.all()
-        elif args[0] in classes:
-            obj_dict = models.storage.all(classes[args[0]])
+        elif args[0] in clses:
+            obj_dict = models.storage.all(clses[args[0]])
         else:
             print("** class doesn't exist **")
             return False
@@ -130,7 +130,7 @@ class HBNBCommand(cmd.Cmd):
         floats = ["latitude", "longitude"]
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] in classes:
+        elif args[0] in clses:
             if len(args) > 1:
                 k = args[0] + "." + args[1]
                 if k in models.storage.all():

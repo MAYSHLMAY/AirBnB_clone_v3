@@ -12,58 +12,56 @@ from models.review import Review
 from models.state import State
 from models.user import User
 
-classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
+clses = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class FileStorage:
     """serializes instances to a JSON file & deserializes back to instances"""
 
-    # string - path to the JSON file
-    __file_path = "file.json"
-    # dictionary - empty but will store all objects by <class name>.id
-    __objects = {}
+    __f_p = "file.json"
+    __objs = {}
 
     def all(self, cls=None):
-        """returns the dictionary __objects"""
+        """returns the dictionary __objs"""
         if cls is not None:
-            new_dict = {}
-            for key, value in self.__objects.items():
+            nw_dct = {}
+            for key, value in self.__objs.items():
                 if cls == value.__class__ or cls == value.__class__.__name__:
-                    new_dict[key] = value
-            return new_dict
-        return self.__objects
+                    nw_dct[key] = value
+            return nw_dct
+        return self.__objs
 
-    def new(self, obj):
-        """sets in __objects the obj with key <obj class name>.id"""
-        if obj is not None:
-            key = obj.__class__.__name__ + "." + obj.id
-            self.__objects[key] = obj
+    def new(self, ubj):
+        """sets in __objs the ubj with key <ubj class name>.id"""
+        if ubj is not None:
+            key = ubj.__class__.__name__ + "." + ubj.id
+            self.__objs[key] = ubj
 
     def save(self):
-        """serializes __objects to the JSON file (path: __file_path)"""
+        """serializes __objs to the JSON file (path: __f_p)"""
         json_objects = {}
-        for key in self.__objects:
-            json_objects[key] = self.__objects[key].to_dict()
-        with open(self.__file_path, 'w') as f:
+        for key in self.__objs:
+            json_objects[key] = self.__objs[key].to_dict()
+        with open(self.__f_p, 'w') as f:
             json.dump(json_objects, f)
 
     def reload(self):
-        """deserializes the JSON file to __objects"""
+        """deserializes the JSON file to __objs"""
         try:
-            with open(self.__file_path, 'r') as f:
+            with open(self.__f_p, 'r') as f:
                 jo = json.load(f)
             for key in jo:
-                self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
+                self.__objs[key] = clses[jo[key]["__class__"]](**jo[key])
         except:
             pass
 
-    def delete(self, obj=None):
-        """delete obj from __objects if it’s inside"""
-        if obj is not None:
-            key = obj.__class__.__name__ + '.' + obj.id
-            if key in self.__objects:
-                del self.__objects[key]
+    def delete(self, ubj=None):
+        """delete ubj from __objs if it’s inside"""
+        if ubj is not None:
+            key = ubj.__class__.__name__ + '.' + ubj.id
+            if key in self.__objs:
+                del self.__objs[key]
 
     def close(self):
         """call reload() method for deserializing the JSON file to objects"""

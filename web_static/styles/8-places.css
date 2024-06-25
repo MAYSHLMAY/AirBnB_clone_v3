@@ -1,0 +1,81 @@
+/* class price_by_night style */
+.places .price_by_night {
+	display: flex;
+	height: 60px;	
+	min-width: 60px;
+	color: #FF5A5F;
+	border: 4px solid #FF5A5F;
+	border-radius:120px 120px / 120px;
+	font-size: 30px;
+	margin-top: 5px;
+	align-items: center;
+	justify-content: center;
+}
+
+/* information class style */
+.places .information {
+	display: inline-block;
+	height: 80px;
+	width: 100%;
+	border-top: 1px solid #DDDDDD;
+	border-bottom: 1px solid #DDDDDD;
+
+	padding-top: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+/* Common style for the max_guest class, number_rooms class and number_bathrooms class */
+.max_guest, .number_rooms, .number_bathrooms {
+	display: inline-block;
+	width: 100px;
+	text-align: center;
+	line-height: 0;
+}
+
+/* style for guest icon */
+.guest_icon {
+	display: inline-block;
+	background-image: url("../images/icon_bed.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 50px;
+    height: 30px;
+
+}
+
+/* style for bedroom icon */
+.bed_icon {
+	display: inline-block;
+	background-image: url("../images/icon_bed.png");
+	background-repeat: no-repeat;
+	background-position: center;
+    width: 50px;
+    height: 30px;
+
+}
+
+/* style for bathroom icon */
+.bath_icon {
+	display: inline-block;
+	background-image: url("../images/icon_bath.png");
+	background-repeat: no-repeat;
+	background-position: center;
+    width: 50px;
+    height: 30px;
+}
+
+/* User class style */
+.user {
+	margin-top: 5px;
+	margin-bottom: 10px;	
+}
+
+/* Description class style */
+.description {
+	text-align: left;
+}
+
+strong {
+	font-weight: bold;
+}

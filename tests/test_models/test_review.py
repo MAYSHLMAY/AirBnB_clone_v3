@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Contains the TestReviewDocs classes
+Contains the TestReviewDocs clses
 """
 
 from datetime import datetime

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Contains the TestFileStorageDocs classes
+Contains the TestFileStorageDocs clses
 """
 
 from datetime import datetime
@@ -19,7 +19,7 @@ import os
 import pep8
 import unittest
 FileStorage = file_storage.FileStorage
-classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
+clses = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
 
 
@@ -74,9 +74,9 @@ class TestFileStorage(unittest.TestCase):
     def test_all_returns_dict(self):
         """Test that all returns the FileStorage.__objects attr"""
         storage = FileStorage()
-        new_dict = storage.all()
-        self.assertEqual(type(new_dict), dict)
-        self.assertIs(new_dict, storage._FileStorage__objects)
+        nw_dct = storage.all()
+        self.assertEqual(type(nw_dct), dict)
+        self.assertIs(nw_dct, storage._FileStorage__objects)
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_new(self):
@@ -85,7 +85,7 @@ class TestFileStorage(unittest.TestCase):
         save = FileStorage._FileStorage__objects
         FileStorage._FileStorage__objects = {}
         test_dict = {}
-        for key, value in classes.items():
+        for key, value in clses.items():
             with self.subTest(key=key, value=value):
                 instance = value()
                 instance_key = instance.__class__.__name__ + "." + instance.id
@@ -98,18 +98,18 @@ class TestFileStorage(unittest.TestCase):
     def test_save(self):
         """Test that save properly saves objects to file.json"""
         storage = FileStorage()
-        new_dict = {}
-        for key, value in classes.items():
+        nw_dct = {}
+        for key, value in clses.items():
             instance = value()
             instance_key = instance.__class__.__name__ + "." + instance.id
-            new_dict[instance_key] = instance
+            nw_dct[instance_key] = instance
         save = FileStorage._FileStorage__objects
-        FileStorage._FileStorage__objects = new_dict
+        FileStorage._FileStorage__objects = nw_dct
         storage.save()
         FileStorage._FileStorage__objects = save
-        for key, value in new_dict.items():
-            new_dict[key] = value.to_dict()
-        string = json.dumps(new_dict)
+        for key, value in nw_dct.items():
+            nw_dct[key] = value.to_dict()
+        string = json.dumps(nw_dct)
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))

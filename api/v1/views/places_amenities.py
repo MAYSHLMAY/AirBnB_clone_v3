@@ -1,8 +1,13 @@
-from flask import jsonify, abort
+#!/usr/bin/python3
+"""places_amenities"""
 from api.v1.views import app_views
+from flask import jsonify, abort, request
 from models import storage
 from models.place import Place
 from models.amenity import Amenity
+from datetime import datetime
+import uuid
+from os import getenv
 
 @app_views.route('/places/<place_id>/amenities', methods=['GET'], strict_slashes=False)
 def get_place_amenities(place_id):

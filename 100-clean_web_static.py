@@ -1,76 +1,69 @@
 #!/usr/bin/python3
 """
-Deletes out-of-date archives,
-using the function do_clean
+Fabric script methods:
+    do_pack(): packs web_static/ files into .tgz archive
+    do_deploy(archive_path): deploys archive to webservers
+    deploy(): do_packs && do_deploys
+    do_clean(n=0): removes old versions and keeps n (or 1) newest versions only
+Usage:
+    fab -f 3-deploy_web_static.py do_clean:n=2 -i my_ssh_private_key -u ubuntu
 """
-from fabric.api import *
-from datetime import datetime
-import os
-
-env.hosts = ['54.144.136.64', '100.24.236.179']
-env.user = 'ubuntu'
-
-
-def deploy():
-    ''' Deploys archive '''
-    archive_path = do_pack()
-    if not archive_path:
-        return False
-    return do_deploy(archive_path)
+from fabric.api import local, env, put, run
+from time import strftime
+import os.path
+env.hosts = ['35.229.54.225', '35.231.225.251']
 
 
 def do_pack():
-    '''
-    Generates a tgz archive from the
-    contents of the web_static folder
-    '''
+    """generate .tgz archive of web_static/ folder"""
+    timenow = strftime("%Y%M%d%H%M%S")
     try:
-        local('mkdir -p versions')
-        datetime_format = '%Y%m%d%H%M%S'
-        archive_path = 'versions/web_static_{}.tgz'.format(
-            datetime.now().strftime(datetime_format))
-        local('tar -cvzf {} web_static'.format(archive_path))
-        print('web_static packed: {} -> {}'.format(archive_path,
-              os.path.getsize(archive_path)))
-        return archive_path
+        local("mkdir -p versions")
+        filename = "versions/web_static_{}.tgz".format(timenow)
+        local("tar -cvzf {} web_static/".format(filename))
+        return filename
     except:
         return None
 
 
 def do_deploy(archive_path):
-    '''
+    """
     Deploy archive to web server
-    '''
-    if not os.path.exists(archive_path):
+    """
+    if os.path.isfile(archive_path) is False:
         return False
-    file_name = archive_path.split('/')[1]
-    file_path = '/data/web_static/releases/'
-    releases_path = file_path + file_name[:-4]
     try:
-        put(archive_path, '/tmp/')
-        run('mkdir -p {}'.format(releases_path))
-        run('tar -xzf /tmp/{} -C {}'.format(file_name, releases_path))
-        run('rm /tmp/{}'.format(file_name))
-        run('mv {}/web_static/* {}/'.format(releases_path, releases_path))
-        run('rm -rf {}/web_static'.format(releases_path))
-        run('rm -rf /data/web_static/current')
-        run('ln -s {} /data/web_static/current'.format(releases_path))
-        print('New version deployed!')
+        filename = archive_path.split("/")[-1]
+        no_ext = filename.split(".")[0]
+        path_no_ext = "/data/web_static/releases/{}/".format(no_ext)
+        symlink = "/data/web_static/current"
+        put(archive_path, "/tmp/")
+        run("mkdir -p {}".format(path_no_ext))
+        run("tar -xzf /tmp/{} -C {}".format(filename, path_no_ext))
+        run("rm /tmp/{}".format(filename))
+        run("mv {}web_static/* {}".format(path_no_ext, path_no_ext))
+        run("rm -rf {}web_static".format(path_no_ext))
+        run("rm -rf {}".format(symlink))
+        run("ln -s {} {}".format(path_no_ext, symlink))
         return True
     except:
         return False
 
 
-def do_clean(number=0):
-    ''' Removes out of date archives locally and remotely '''
-    number = int(number)
-    if number == 0:
-        number = 2
-    else:
-        number += 1
+def deploy():
+    archive_path = do_pack()
+    if archive_path is None:
+        return False
+    success = do_deploy(archive_path)
+    return success
 
-    local('cd versions; ls -t | tail -n +{} | xargs rm -rf'
-          .format(number))
-    releases_path = '/data/web_static/releases'
-    run('cd {}; ls -t | tail -n +{} | xargs rm -rf'
-        .format(releases_path, number))
+
+def do_clean(number=0):
+    if number == 0:
+        number = 1
+    with cd.local('./versions'):
+            local("ls -lt | tail -n +{} | rev | cut -f1 -d" " | rev | \
+            xargs -d '\n' rm".format(1 + number))
+    with cd('/data/web_static/releases/'):
+            run("ls -lt | tail -n +{} | rev | cut -f1 -d" " | rev | \
+            xargs -d '\n' rm".format(1 + number))
